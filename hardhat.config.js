@@ -12,15 +12,15 @@ module.exports = {
       },
     },
     sepolia: {
-      url: "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
-      accounts: ["YOUR_PRIVATE_KEY"],
+      url: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
     mainnet: {
-      url: "https://mainnet.infura.io/v3/YOUR_INFURA_KEY",
-      accounts: ["YOUR_PRIVATE_KEY"],
+      url: process.env.MAINNET_RPC_URL || "https://mainnet.infura.io/v3/YOUR_INFURA_KEY",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
   },
   etherscan: {
-    apiKey: "YOUR_ETHERSCAN_API_KEY",
+    apiKey: process.env.ETHERSCAN_API_KEY || "YOUR_ETHERSCAN_API_KEY",
   },
 };

@@ -12,7 +12,7 @@ contract AlaraToken is ERC20, Ownable {
     event FeeWalletUpdated(address newWallet);
     event FeeToggled(bool enabled);
 
-    constructor() ERC20("Alara", "ALA") {
+    constructor() ERC20("Alara", "ALA") Ownable(msg.sender) {
         feeWallet = owner();
         _mint(owner(), 8000000 * 10 ** decimals()); // 8 million ALA
     }
@@ -36,21 +36,38 @@ contract AlaraToken is ERC20, Ownable {
         _mint(to, amount);
     }
 
-    function _transfer(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) internal virtual override checkFeeEnabled {
-        if (sender != owner() && recipient != owner() && sender != feeWallet) {
+    function transfer(address to, uint256 amount) public virtual override checkFeeEnabled returns (bool) {
+        address sender = msg.sender;
+        if (sender != owner() && to != owner() && sender != feeWallet) {
             uint256 feeAmount = (amount * TRANSFER_FEE_PERCENT) / 100;
             uint256 amountAfterFee = amount - feeAmount;
             
             require(amountAfterFee > 0, "Transfer amount too small after fee");
             
             super._transfer(sender, feeWallet, feeAmount);
-            super._transfer(sender, recipient, amountAfterFee);
+            super._transfer(sender, to, amountAfterFee);
+            return true;
         } else {
-            super._transfer(sender, recipient, amount);
+            return super.transfer(to, amount);
+        }
+    }
+
+    function transferFrom(address from, address to, uint256 amount) public virtual override checkFeeEnabled returns (bool) {
+        address spender = msg.sender;
+        if (from != owner() && to != owner() && from != feeWallet && spender != feeWallet) {
+            uint256 feeAmount = (amount * TRANSFER_FEE_PERCENT) / 100;
+            uint256 amountAfterFee = amount - feeAmount;
+            
+            require(amountAfterFee > 0, "Transfer amount too small after fee");
+            
+            super._transfer(from, feeWallet, feeAmount);
+            super._transfer(from, to, amountAfterFee);
+            
+            // Still reduce allowance by the original amount (not amountAfterFee)
+            _approve(from, spender, allowance(from, spender) - amount);
+            return true;
+        } else {
+            return super.transferFrom(from, to, amount);
         }
     }
 }
