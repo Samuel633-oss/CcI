@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Hardhat
+artifacts/
+cache/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Deployment
+.deployment.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build
+build/
+dist/
