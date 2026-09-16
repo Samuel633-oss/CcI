@@ -14,7 +14,7 @@ contract AlaraToken is ERC20, Ownable {
 
     constructor() ERC20("Alara", "ALA") {
         feeWallet = owner();
-        _mint(owner(), 4100000 * 10 ** decimals()); // 4.1 million ALA
+        _mint(owner(), 8000000 * 10 ** decimals()); // 8 million ALA
     }
 
     modifier checkFeeEnabled() {

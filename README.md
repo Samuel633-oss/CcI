@@ -5,7 +5,7 @@
 ## ✅ Features
 - **Name:** Alara
 - **Symbol:** ALA
-- **Total Supply:** 4,100,000 ALA
+- **Total Supply:** 8,000,000 ALA
 - **Decimals:** 18
 - **Transfer Fee:** 2% (deducted from every transfer)
 - **Mintable:** Owner can mint new tokens
