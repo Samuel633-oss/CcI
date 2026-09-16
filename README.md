@@ -1,37 +1,28 @@
-Bitcoin Core integration/staging tree
+Alara Core integration/staging tree
 =====================================
 
-https://bitcoincore.org
+Alara is a fully decentralized blockchain with Bitcoin 2009-style Proof-of-Work consensus.
 
-For an immediately usable, binary version of the Bitcoin Core software, see
-https://bitcoincore.org/en/download/.
-
-What is Bitcoin Core?
+What is Alara Core?
 ---------------------
 
-Bitcoin Core connects to the Bitcoin peer-to-peer network to download and fully
+Alara Core connects to the Alara peer-to-peer network to download and fully
 validate blocks and transactions. It also includes a wallet and graphical user
 interface, which can be optionally built.
 
-Further information about Bitcoin Core is available in the [doc folder](/doc).
+Further information about Alara Core is available in the [doc folder](/doc).
 
 License
 -------
 
-Bitcoin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+Alara Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
 information or see https://opensource.org/license/MIT.
 
 Development Process
 -------------------
 
-The `master` branch is regularly built (see `doc/build-*.md` for instructions) and tested, but it is not guaranteed to be
-completely stable. [Tags](https://github.com/bitcoin/bitcoin/tags) are created
-regularly from release branches to indicate new official, stable release versions of Bitcoin Core.
-
-The https://github.com/bitcoin-core/gui repository is used exclusively for the
-development of the GUI. Its master branch is identical in all monotree
-repositories. Release branches and tags do not exist, so please do not fork
-that repository unless it is for development reasons.
+The `master` branch is regularly built and tested, but it is not guaranteed to be
+completely stable. Tags are created regularly from release branches to indicate new official, stable release versions of Alara Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
 and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).
@@ -46,34 +37,53 @@ lots of money.
 
 ### Automated Testing
 
-Developers are strongly encouraged to write [unit tests](src/test/README.md) for new code, and to
+Developers are strongly encouraged to write unit tests for new code, and to
 submit new unit tests for old code. Unit tests can be compiled and run
-(assuming they weren't disabled during the generation of the build system) with: `ctest`. Further details on running
-and extending unit tests can be found in [/src/test/README.md](/src/test/README.md).
+using `make check`.
 
-There are also [regression and integration tests](/test), written
-in Python.
-These tests can be run (if the [test dependencies](/test) are installed) with: `build/test/functional/test_runner.py`
-(assuming `build` is your build directory).
+Alara Specific Features
+-----------------------
 
-The CI (Continuous Integration) systems make sure that every pull request is tested on Windows, Linux, and macOS.
-The CI must pass on all commits before merge to avoid unrelated CI failures on new pull requests.
+- **Fixed Supply**: 21,000,000 ALA (no ability to mint/print new tokens beyond this cap)
+- **5% Transaction Fee**: Every transaction includes a mandatory 5% fee on the transaction value
+- **Proof-of-Work**: SHA-256 mining algorithm, Bitcoin 2009 style
+- **Fully Decentralized**: No admin controls, no central authority, no special privileges
+- **Free to Start**: Like Bitcoin in 2009, anyone can run a node and mine
 
-### Manual Quality Assurance (QA) Testing
+## Quick Start
 
-Changes should be tested by somebody other than the developer who wrote the
-code. This is especially important for large or high-risk changes. It is useful
-to add a test plan to the pull request description if testing the changes is
-not straightforward.
+To build and run Alara:
 
-Translations
-------------
+```bash
+# Clone the repository
+git clone https://github.com/Samuel633-oss/CcI.git
+cd CcI
 
-Changes to translations as well as new translations can be submitted to
-[Bitcoin Core's Transifex page](https://explore.transifex.com/bitcoin/bitcoin/).
+# Build (requires dependencies)
+./autogen.sh
+./configure
+make
 
-Translations are periodically pulled from Transifex and merged into the git repository. See the
-[translation process](doc/translation_process.md) for details on how this works.
+# Run a node
+./src/alarad
 
-**Important**: We do not accept translation changes as GitHub pull requests because the next
-pull from Transifex would automatically overwrite them again.
+# Or use the wrapper
+./src/alara node
+```
+
+## Network Parameters
+
+- **Ticker**: ALA
+- **Total Supply**: 21,000,000 ALA
+- **Block Reward**: Follows Bitcoin halving schedule
+- **Transaction Fee**: 5% of transaction value (mandatory)
+- **Algorithm**: SHA-256 Proof-of-Work
+- **Block Time**: 10 minutes (target)
+
+## Important Notes
+
+- This is a **fork of Bitcoin Core** modified for Alara specifications
+- **No minting functions** exist - supply is strictly capped at 21M ALA
+- **5% fee is enforced at consensus level** - transactions with insufficient fees are rejected
+- **Completely open source** - MIT licensed, no proprietary code
+- **Decentralized** - no admin keys, no backdoors, no central control
