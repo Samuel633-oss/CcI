@@ -1,4 +1,4 @@
-// Copyright (c) 2017-present The Bitcoin Core developers
+// Copyright (c) 2017-present The Alara Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -204,7 +204,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, TxValidationState& state, 
             strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn), FormatMoney(value_out)));
     }
 
-    // Tally transaction fees
+    // Tally transaction fees with 5% fee for Alara
     const CAmount txfee_aux = nValueIn - value_out;
     if (!MoneyRange(txfee_aux)) {
         // Unreachable, given the following preconditions:
@@ -213,6 +213,14 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, TxValidationState& state, 
         // * `nValueIn < value_out` was handled above, so `nValueIn >= value_out` here (and `txfee_aux >= 0`).
         // Therefore `0 <= txfee_aux = nValueIn - value_out <= nValueIn <= MAX_MONEY`.
         return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-fee-outofrange");
+    }
+
+    // Alara: Enforce 5% transaction fee
+    // The fee must be at least 5% of the transaction value being sent
+    const CAmount required_fee = value_out * 5 / 100;
+    if (txfee_aux < required_fee) {
+        return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-fee-too-low",
+            strprintf("transaction fee (%s) is less than required 5%% fee (%s)", FormatMoney(txfee_aux), FormatMoney(required_fee)));
     }
 
     txfee = txfee_aux;

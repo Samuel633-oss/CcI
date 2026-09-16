@@ -1,9 +1,9 @@
-// Copyright (c) 2009-present The Bitcoin Core developers
+// Copyright (c) 2009-present The Alara Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CLIENTVERSION_H
-#define BITCOIN_CLIENTVERSION_H
+#ifndef ALARA_CLIENTVERSION_H
+#define ALARA_CLIENTVERSION_H
 
 #include <util/macros.h>
 
@@ -36,4 +36,4 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
 
 #endif // RC_INVOKED
 
-#endif // BITCOIN_CLIENTVERSION_H
+#endif // ALARA_CLIENTVERSION_H
