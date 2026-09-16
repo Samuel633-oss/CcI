@@ -1,6 +1,0 @@
-# Alara Blockchain Dependencies
-# Python 3.8+
-
-# Core dependencies
-flask>=2.0.0
-requests>=2.25.0

@@ -1,143 +1,79 @@
-# Alara Token (ALA) - ERC-20 with 2% Transfer Fee
+Bitcoin Core integration/staging tree
+=====================================
 
-**Alara (ALA)** is an ERC-20 token built on Ethereum with a **2% transfer fee**, **mintable** functionality, and **no burn** capability. The total supply is **4.1 million ALA** with **18 decimals**.
+https://bitcoincore.org
 
-## ✅ Features
-- **Name:** Alara
-- **Symbol:** ALA
-- **Total Supply:** 8,000,000 ALA
-- **Decimals:** 18
-- **Transfer Fee:** 2% (deducted from every transfer)
-- **Mintable:** Owner can mint new tokens
-- **No Burn:** Users cannot burn tokens
-- **Ownable:** Admin control for fee wallet and minting
+For an immediately usable, binary version of the Bitcoin Core software, see
+https://bitcoincore.org/en/download/.
 
-## 📁 Project Structure
-```
-.
-├── contracts/
-│   └── AlaraToken.sol       # ERC-20 Token Contract
-├── scripts/
-│   └── deploy.js             # Deployment Script
-├── hardhat.config.js         # Hardhat Configuration
-├── package.json              # Node.js Dependencies
-└── README.md
-```
+What is Bitcoin Core?
+---------------------
 
-## 🚀 Setup & Deployment
+Bitcoin Core connects to the Bitcoin peer-to-peer network to download and fully
+validate blocks and transactions. It also includes a wallet and graphical user
+interface, which can be optionally built.
 
-### 1. Prerequisites
-- [Node.js (v18+)](https://nodejs.org/)
-- [Git](https://git-scm.com/)
-- [MetaMask](https://metamask.io/) (for real deployments)
+Further information about Bitcoin Core is available in the [doc folder](/doc).
 
-### 2. Install Dependencies
-```bash
-npm install
-```
+License
+-------
 
-### 3. Local Deployment (Hardhat Network)
-```bash
-# Compile contracts
-npx hardhat compile
+Bitcoin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+information or see https://opensource.org/license/MIT.
 
-# Deploy to local Hardhat network
-npx hardhat run scripts/deploy.js
-```
-- This will deploy to a **local blockchain** (no real gas fees).
-- Contract address and details will be saved in `deployment.json`.
+Development Process
+-------------------
 
-### 4. Deploy to a Real Network (Ethereum, Sepolia, etc.)
-1. **Get API Keys:**
-   - [Infura](https://infura.io/) (for RPC URL)
-   - [Etherscan](https://etherscan.io/) (for contract verification)
+The `master` branch is regularly built (see `doc/build-*.md` for instructions) and tested, but it is not guaranteed to be
+completely stable. [Tags](https://github.com/bitcoin/bitcoin/tags) are created
+regularly from release branches to indicate new official, stable release versions of Bitcoin Core.
 
-2. **Update `hardhat.config.js`:**
-   ```javascript
-   networks: {
-     sepolia: {
-       url: "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
-       accounts: ["YOUR_PRIVATE_KEY"],
-     },
-   },
-   etherscan: {
-     apiKey: "YOUR_ETHERSCAN_API_KEY",
-   },
-   ```
+The https://github.com/bitcoin-core/gui repository is used exclusively for the
+development of the GUI. Its master branch is identical in all monotree
+repositories. Release branches and tags do not exist, so please do not fork
+that repository unless it is for development reasons.
 
-3. **Deploy to Sepolia (Testnet):**
-   ```bash
-   npx hardhat run scripts/deploy.js --network sepolia
-   ```
+The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
+and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).
 
-4. **Deploy to Ethereum Mainnet:**
-   ```bash
-   npx hardhat run scripts/deploy.js --network mainnet
-   ```
-   ⚠️ **Warning:** Mainnet deployment requires **real ETH for gas fees** (~$50–$100).
+Testing
+-------
 
-### 5. Verify Contract on Etherscan
-```bash
-npx hardhat verify --network sepolia DEPLOYED_CONTRACT_ADDRESS
-```
+Testing and code review is the bottleneck for development; we get more pull
+requests than we can review and test on short notice. Please be patient and help out by testing
+other people's pull requests, and remember this is a security-critical project where any mistake might cost people
+lots of money.
 
-## 📜 Contract Details
+### Automated Testing
 
-### **AlaraToken.sol**
-- **Inherits:** ERC-20, Ownable
-- **Transfer Fee:** 2% of every transfer (sent to `feeWallet`)
-- **Fee Wallet:** Defaults to contract owner (can be updated)
-- **Mintable:** Only owner can mint new tokens
+Developers are strongly encouraged to write [unit tests](src/test/README.md) for new code, and to
+submit new unit tests for old code. Unit tests can be compiled and run
+(assuming they weren't disabled during the generation of the build system) with: `ctest`. Further details on running
+and extending unit tests can be found in [/src/test/README.md](/src/test/README.md).
 
-### **Key Functions**
-| Function | Description |
-|----------|-------------|
-| `mint(address to, uint256 amount)` | Mint new tokens (owner only) |
-| `setFeeWallet(address _newWallet)` | Update fee wallet address (owner only) |
-| `toggleFee(bool _enabled)` | Enable/disable transfer fees (owner only) |
+There are also [regression and integration tests](/test), written
+in Python.
+These tests can be run (if the [test dependencies](/test) are installed) with: `build/test/functional/test_runner.py`
+(assuming `build` is your build directory).
 
-### **Fee Logic**
-- **2% fee** is deducted from every transfer **except**:
-  - Transfers **from/to the owner**
-  - Transfers **from/to the fee wallet**
-- Example: If you transfer **100 ALA**, the recipient gets **98 ALA**, and **2 ALA** goes to the fee wallet.
+The CI (Continuous Integration) systems make sure that every pull request is tested on Windows, Linux, and macOS.
+The CI must pass on all commits before merge to avoid unrelated CI failures on new pull requests.
 
-## 🔐 Security Notes
-- **Audit Recommended:** This contract has not been professionally audited. Use at your own risk.
-- **Fee Wallet:** By default, the fee wallet is the contract owner. Update it with `setFeeWallet` if needed.
-- **Gas Costs:** Deploying to mainnet requires ETH for gas fees.
+### Manual Quality Assurance (QA) Testing
 
-## 📊 Example Workflow
+Changes should be tested by somebody other than the developer who wrote the
+code. This is especially important for large or high-risk changes. It is useful
+to add a test plan to the pull request description if testing the changes is
+not straightforward.
 
-### 1. Deploy to Sepolia Testnet
-```bash
-npx hardhat run scripts/deploy.js --network sepolia
-```
-Output:
-```
-AlaraToken deployed to: 0x123...abc
-Owner address: 0x456...def
-Total supply: 4100000000000000000000000
-Fee wallet: 0x456...def
-```
+Translations
+------------
 
-### 2. Add Token to MetaMask
-1. Open MetaMask
-2. Click **Import Token**
-3. Paste the deployed contract address (`0x123...abc`)
-4. Token symbol (`ALA`) and decimals (`18`) will auto-fill
+Changes to translations as well as new translations can be submitted to
+[Bitcoin Core's Transifex page](https://explore.transifex.com/bitcoin/bitcoin/).
 
-### 3. Test Transfers
-- Send **100 ALA** to a friend.
-- They receive **98 ALA** (2% fee deducted).
-- Check the fee wallet balance to confirm the **2 ALA** fee.
+Translations are periodically pulled from Transifex and merged into the git repository. See the
+[translation process](doc/translation_process.md) for details on how this works.
 
-## 🤝 Contributing
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature-branch`)
-3. Commit your changes (`git commit -m 'Add new feature'`)
-4. Push to the branch (`git push origin feature-branch`)
-5. Open a Pull Request
-
-## 📄 License
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+**Important**: We do not accept translation changes as GitHub pull requests because the next
+pull from Transifex would automatically overwrite them again.
